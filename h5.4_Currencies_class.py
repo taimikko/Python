@@ -74,7 +74,8 @@ class Currencies(object):
             print(self.currencies[c])
 
     def listByRate(self):
-        for c in sorted(self.currencies, key=lambda x: self.currencies[x].euroRate):
+        # TODO: Pitäisi sortata nousevaan euroRate ja käänteiseen x ?
+        for c in sorted(self.currencies, key=lambda x: (-1 * self.currencies[x].euroRate, x) ):
             print(self.currencies[c])
         # for c in sorted(self.currencies, key = lambda x: x[self.EURORATE] ):
             #print(c[self.NAME], c[self.EURORATE])
@@ -93,6 +94,7 @@ if __name__ == "__main__":
     currs = Currencies(argv[1])
     # print(dir(c))
     currs.listByName()
+    print()
     currs.listByRate()
     print("2.0 USD is",currs.convert("USD", 2.0, "JPY"), "JPY")
     print("125.0 DKK is",currs.convert("DKK", 125.0, "EUR"), "EUR")
