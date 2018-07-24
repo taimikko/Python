@@ -32,6 +32,7 @@ Write Python code that defines a class Currencies which has the following functi
 WETO's first test starts by creating a Currencies object currs = Currencies("currencies.txt"), where the input file contains the following currency information:
 """
 
+
 class Currency(object):
     def __init__(self, name, fullName, rate, reverseRate):
         try:
@@ -40,16 +41,13 @@ class Currency(object):
             self.euroRate = float(rate)
             self.reverseRate = float(reverseRate)
         except ValueError:
-            print("__init__(",name, fullName, rate, reverseRate,")")        
+            print("__init__(", name, fullName, rate, reverseRate, ")")
 
     def __lt__(self, other):
         return self.fullName < other.fullName
 
     def __str__(self):
         return self.name + " " + str(self.euroRate)
-    
-    def sortRate(self):
-        return (self.euroRate, self.name)
 
 
 class Currencies(object):
@@ -60,30 +58,36 @@ class Currencies(object):
     REVERSERATE = 2
 
     def __init__(self, filename):
-        self.currencies = list()
+        self.currencies = {}
         with open(filename, encoding="UTF-8") as f:
             for row in f:
-                self.currencies.append(row[:-1].split("\t"))
-                # curr = Currency(items[0], items[1], items[3], items[2])
-                # self.currencies[items[0]] = curr
+                # self.currencies.append(row[:-1].split("\t"))
+                # TODO: list() ei ota huomioon duplikaatteja (USD = 1.2 , USD = 1.22)
+                items = row[:-1].split("\t")
+                curr = Currency(items[self.NAME], items[self.FULLNAME],
+                                items[self.EURORATE], items[self.REVERSERATE])
+                self.currencies[items[self.NAME]] = curr
 
     def listByName(self):
         for c in sorted(self.currencies):
-            print(c[self.NAME], c[self.EURORATE])
-            #print(c)
-    
+            #print(c[self.NAME], c[self.EURORATE])
+            print(self.currencies[c])
+
     def listByRate(self):
-        for c in sorted(self.currencies, key = lambda x: x[self.EURORATE] ):
-            #print(c)
-            print(c[self.NAME], c[self.EURORATE])
+        for c in sorted(self.currencies, key=lambda x: self.currencies[x].euroRate):
+            print(self.currencies[c])
+        # for c in sorted(self.currencies, key = lambda x: x[self.EURORATE] ):
+            #print(c[self.NAME], c[self.EURORATE])
 
     def convert(self, currA, x, currB):
-        #if CurrA in self.currencies ...
+        # if CurrA in self.currencies ...
         return (x)
-    
-if __name__=="__main__":
+
+
+if __name__ == "__main__":
     from sys import argv
     c = Currencies(argv[1])
+    # print(dir(c))
     print("1-----------")
     c.listByName()
     print("2-----------")
