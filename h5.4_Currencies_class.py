@@ -53,31 +53,29 @@ class Currency(object):
 
 
 class Currencies(object):
+    # Order of columns in currencies -list
+    NAME = 0
+    FULLNAME = 1
+    EURORATE = 3
+    REVERSERATE = 2
 
     def __init__(self, filename):
-        self.currencies = {}
+        self.currencies = list()
         with open(filename, encoding="UTF-8") as f:
             for row in f:
-                items = row.split("\t")
-                curr = Currency(items[0], items[1], items[3], items[2])
-                self.currencies[items[0]] = curr
+                self.currencies.append(row[:-1].split("\t"))
+                # curr = Currency(items[0], items[1], items[3], items[2])
+                # self.currencies[items[0]] = curr
 
     def listByName(self):
         for c in sorted(self.currencies):
-            print(self.currencies[c])
+            print(c[self.NAME], c[self.EURORATE])
+            #print(c)
     
-    def sortRate2(self, c):
-        for c in self.currencies:
-            # print (self.currencies[c], self.currencies[c].sortRate)
-            yield self.currencies[c].sortRate
-
     def listByRate(self):
-        tmp = list(map(self.sortRate2, self.currencies))
-        print (tmp)
-        for c in tmp : #, key=self.sortRate2):
-            print(c)
-        for c in sorted(self.currencies, self.sortRate2(c)):
-            print(c)
+        for c in sorted(self.currencies, key = lambda x: x[self.EURORATE] ):
+            #print(c)
+            print(c[self.NAME], c[self.EURORATE])
 
     def convert(self, currA, x, currB):
         #if CurrA in self.currencies ...
