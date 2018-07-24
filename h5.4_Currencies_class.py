@@ -81,15 +81,20 @@ class Currencies(object):
 
     def convert(self, currA, x, currB):
         # if CurrA in self.currencies ...
-        return (x)
+        c = self.currencies[currA]
+        amount = x * c.euroRate
+        c = self.currencies[currB]
+        amount *= c.reverseRate
+        return (amount)
 
 
 if __name__ == "__main__":
     from sys import argv
-    c = Currencies(argv[1])
+    currs = Currencies(argv[1])
     # print(dir(c))
-    print("1-----------")
-    c.listByName()
-    print("2-----------")
-    c.listByRate()
-    print("3-----------")
+    currs.listByName()
+    currs.listByRate()
+    print("2.0 USD is",currs.convert("USD", 2.0, "JPY"), "JPY")
+    print("125.0 DKK is",currs.convert("DKK", 125.0, "EUR"), "EUR")
+    print("20.0 EUR is",currs.convert("EUR", 20.0, "USD"), "USD")
+    print("140.0 CNY is",currs.convert("CNY", 140.0, "USD"), "USD")
