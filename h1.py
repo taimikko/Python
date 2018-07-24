@@ -1,0 +1,10 @@
+rivi = input()
+luvut= rivi.split(sep=' ')
+s=float(luvut[0])
+i=float(luvut[1])
+n=int(luvut[2])
+p=int(luvut[3])
+for year in range(0, n+1):
+  k = format(s,"#."+str(p)+"f")
+  print("Year "+str(year)+":", k)
+  s+=((i/100)*s)

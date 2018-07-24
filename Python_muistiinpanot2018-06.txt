@@ -1,0 +1,14 @@
+21.6.2018 Python
+
+versio 3.6.5
+
+wetodev.sis.uta.fi
+
+java on tehokkaampaa kuin Python
+
+https://docs.python.org/3/
+https://docs.python.org/3/library/index.html
+
+teht‰v‰t: https://wetodev.sis.uta.fi/weto5/viewTask.action?taskId=6121&tabId=0&dbId=1
+
+heikki.hyyro@uta.fi (jos on kysytt‰v‰‰)

@@ -1,0 +1,60 @@
+University of Tampere:
+TEACHING SCHEDULE 2017–2018
+▪ Teaching Schedules » Faculty of Natural Sciences
+Bachelor's Degree Programme in Computer Sciences
+Show the whole teaching schedule
+Periods
+
+ Period I (4-Sep-2017 – 22-Oct-2017)
+ Period II (23-Oct-2017 – 15-Dec-2017)
+ Period III (8-Jan-2018 – 4-Mar-2018)
+ Period IV (5-Mar-2018 – 27-May-2018)
+Basic studies in Computer Sciences
+
+TIEP1 Introduction to Programming I (Tampere Summer School 2017) 5 ECTS (Language of instruction: English)
+Teaching in the Autumn Semester 2017
+Period (4-Sep-2017 – 22-Oct-2017)
+Info sessions
+
+Maisteriopintojen esittely - HTI (in Finnish)   (Language of instruction: English)
+Intermediate studies in Computer Sciences
+
+TIEA4 Project Work (Fall term 2017) 5–10 ECTS (Language of instruction: English)
+LUOYA200 Innovation Project (Fall term 2017) 5–10 ECTS (Language of instruction: English)
+TIETA19 Practical Programming in Python 5 ECTS (Language of instruction: English)
+HTIS81 Usability Evaluation Methods 5 ECTS (Language of instruction: English)
+TIETA8 Software Engineering 5 ECTS (Language of instruction: English)
+TIETA16 Technologies for learning: mobile and social technologies integration in pursuit of quality learning 5 ECTS (Language of instruction: English)
+Period (23-Oct-2017 – 15-Dec-2017)
+General studies
+
+ITIY3 Introduction to Web Publishing - Autumn 2017 5 ECTS (Language of instruction: English)
+Intermediate studies in Computer Sciences
+
+TIEA4 Project Work (Fall term 2017) 5–10 ECTS (Language of instruction: English) Continues from the previous period
+LUOYA200 Innovation Project (Fall term 2017) 5–10 ECTS (Language of instruction: English) Continues from the previous period
+TIETA17 Introduction to Big Data Processing 5 ECTS (Language of instruction: English)
+HTIS81 Usability Evaluation Methods 5 ECTS (Language of instruction: English) Continues from the previous period
+TIETA8 Software Engineering 5 ECTS (Language of instruction: English) Continues from the previous period
+TIETA16 Technologies for learning: mobile and social technologies integration in pursuit of quality learning 5 ECTS (Language of instruction: English) Continues from the previous period
+Teaching in the Spring Semester 2018
+Period (8-Jan-2018 – 4-Mar-2018)
+Intermediate studies in Computer Sciences
+
+TIEA4 Project Work (Spring term 2018) 5–10 ECTS (Language of instruction: English)
+LUOYA200 Innovation Project (Spring term 2018) 5–10 ECTS (Language of instruction: English)
+TIETA12 WWW Programming 10 ECTS (Language of instruction: English)
+TIEVA38 / HTIS85 Methods in Human-Centered Design 5 ECTS (Language of instruction: English)
+TIETA8 Software Engineering 5 ECTS (Language of instruction: English) Continues from the previous period
+Period (5-Mar-2018 – 27-May-2018)
+General studies
+
+ITIY3 Introduction to Web Publishing - Spring 2018 5 ECTS (Language of instruction: English)
+Intermediate studies in Computer Sciences
+
+TIEA4 Project Work (Spring term 2018) 5–10 ECTS (Language of instruction: English) Continues from the previous period
+LUOYA200 Innovation Project (Spring term 2018) 5–10 ECTS (Language of instruction: English) Continues from the previous period
+TIETA12 WWW Programming 10 ECTS (Language of instruction: English) Continues from the previous period
+TIEVA31 Principles of Programming Graphical User Interfaces (starts on period IV) 5–10 ECTS (Language of instruction: English)
+TIEVA38 / HTIS85 Methods in Human-Centered Design 5 ECTS (Language of instruction: English) Continues from the previous period
+TIETA8 Software Engineering 5 ECTS (Language of instruction: English) Continues from the previous period

@@ -1,0 +1,4 @@
+Senegal	1	1	0	4-3
+Poland	0	0	2	1-5
+Colombia	1	0	1	4-2
+Japan	1	1	0	4-3
