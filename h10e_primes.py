@@ -11,7 +11,7 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 def toka(primes, kpl):
     n = 10**10  # int(input("n:"))
-    talletusvali = 10000
+    talletusvali = 100000 
     ed_lkm = lkm = len(primes)
     if lkm > 0:
         alku = max(primes)+2
@@ -19,6 +19,7 @@ def toka(primes, kpl):
         primes = [2, 3]
         alku = 5
         lkm = ed_lkm = 2
+        kirjoita(primes, "alkuluvut.txt", lkm, lkm, timer(), 2) 
     edAika = timer()
     ed_i = alku
     for i in range(alku, n, 2):
@@ -84,17 +85,19 @@ def kirjoita(primes, tiedosto, lkm, ero=0, edAika=0, i=0):  # "alkuluvut.txt"
     # print(sorted(primes), file=out)  # tulostus kestää 1/10 s
 
     a = timer()
-    with open(tiedosto, "a", encoding="utf-8") as out:
-        print(sorted(primes)[-ero:], file=out,
-              flush=True)  # tulostus kestää 1/10 s
+    SELDOM = 10**7 
+    if lkm % SELDOM == 0:
+        # primes.sort() # mahdetaanko tarvita
+        with open(tiedosto, "w", encoding="utf-8") as out:  # kestää 30 sek
+            for i in range(len(primes)//SELDOM):
+                print(primes[i*SELDOM:(i+1)*SELDOM], file=out, flush=True)
+    else:
+        with open(tiedosto, "a", encoding="utf-8") as out:
+            print(primes[-ero:], file=out,
+                  flush=True)  # tulostus kestää 1/10 s
     print(aika(edAika, timer()), ero, i/ero, "\ttalletus:",
           aika(a, timer()))  # lkm = len(primes)
 
-    # with open(tiedosto, "w", encoding="utf-8") as out:  # kestää 30 sek
-    #     print("[", end="", file=out)
-    #     for i in sorted(primes):
-    #         print(i, ", ", sep="", end="", file=out)
-    #     print("]", file=out)
     backup = tiedosto[:-4]+"_" + \
         str(lkm)+"_"+time.strftime("%H%M%S", time.gmtime())+".txt"
     try:
@@ -106,7 +109,6 @@ def kirjoita(primes, tiedosto, lkm, ero=0, edAika=0, i=0):  # "alkuluvut.txt"
         #rename(tiedosto, backup)
     except Exception as e:
         print("Tiedoston varmuuskopiointi ei onnistu:", tiedosto, backup, e)
-    
 
 
 def aika(a, b):
@@ -120,15 +122,18 @@ def aika(a, b):
 if __name__ == "__main__":
     vanhatiedosto = "alkuluvut.txt"  # "alkuluvut1M.txt"
     start = timer()
-    print("Luetaan aiempia lukuja tiedostosta",vanhatiedosto, end="")
+    print("Luetaan aiempia lukuja tiedostosta", vanhatiedosto, end="")
     try:
+        primes = []
         with open(vanhatiedosto, "r", encoding="utf-8") as infile:
-            apu = infile.read()
-        primes = list(map(int, apu[1:-2].split(", ")))  # set() / tuple()
+            for row in infile:
+                apu = list(map(int, row[1:-2].split(", ")))
+                primes.extend(apu)
     except Exception as e:
-        print("Virhe tiedoston", vanhatiedosto, "lukemisessa ", e.args)
-        primes = [2, 3]
-    print(" ",primes[-3:], end="")
+        print(" Virhe tiedoston", vanhatiedosto, "lukemisessa ", e.args)
+        primes = []
+    primes.sort()
+    print(" ", primes[-3:], end="")
     end = timer()
     print("\tluettu (", len(primes), ") kpl :", aika(start, end))
     lkm = input("Montako haluat:")
