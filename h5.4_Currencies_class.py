@@ -63,7 +63,10 @@ class Currencies(object):
             for row in f:
                 # self.currencies.append(row[:-1].split("\t"))
                 # TODO: list() ei ota huomioon duplikaatteja (USD = 1.2 , USD = 1.22)
-                items = row[:-1].split("\t")
+                if "\n" in row:
+                    items = row[:-1].split("\t")
+                else:
+                    items = row.split("\t")
                 curr = Currency(items[self.NAME], items[self.FULLNAME],
                                 items[self.EURORATE], items[self.REVERSERATE])
                 self.currencies[items[self.NAME]] = curr
@@ -74,14 +77,13 @@ class Currencies(object):
             print(self.currencies[c])
 
     def listByRate(self):
-        # TODO: Pitäisi sortata nousevaan euroRate ja käänteiseen x ?
-        for c in sorted(self.currencies, key=lambda x: (-1 * self.currencies[x].euroRate, x) ):
+        # for c in sorted(sorted(self.currencies, reverse=True), key=lambda x: self.currencies[x].euroRate):
+        # for c in sorted(sorted(self.currencies), key=lambda x: self.currencies[x].euroRate):
+        for c in sorted(self.currencies, key=lambda x: (self.currencies[x].euroRate, x)):
             print(self.currencies[c])
-        # for c in sorted(self.currencies, key = lambda x: x[self.EURORATE] ):
-            #print(c[self.NAME], c[self.EURORATE])
 
     def convert(self, currA, x, currB):
-        # if CurrA in self.currencies ...
+            # if CurrA in self.currencies ...
         c = self.currencies[currA]
         amount = x * c.euroRate
         c = self.currencies[currB]
@@ -96,7 +98,7 @@ if __name__ == "__main__":
     currs.listByName()
     print()
     currs.listByRate()
-    print("2.0 USD is",currs.convert("USD", 2.0, "JPY"), "JPY")
-    print("125.0 DKK is",currs.convert("DKK", 125.0, "EUR"), "EUR")
-    print("20.0 EUR is",currs.convert("EUR", 20.0, "USD"), "USD")
-    print("140.0 CNY is",currs.convert("CNY", 140.0, "USD"), "USD")
+    print("2.0 USD is", currs.convert("USD", 2.0, "JPY"), "JPY")
+    print("125.0 DKK is", currs.convert("DKK", 125.0, "EUR"), "EUR")
+    print("20.0 EUR is", currs.convert("EUR", 20.0, "USD"), "USD")
+    print("140.0 CNY is", currs.convert("CNY", 140.0, "USD"), "USD")
