@@ -1,43 +1,33 @@
 from timeit import default_timer as timer
 
-def toka(n, primes):
+def toka(primes, kpl):
+    n = 10**10 # int(input("n:"))
+    #n = 30379397+1000
     talletusvali = 500
-    tulostusvali = 500
-    lkm = len(primes)
-    ed_lkm = lkm
-    if len(primes) > 0:
+    ed_lkm = lkm = len(primes)
+    if lkm > 0:
         alku = max(primes)+2
     else:
         primes = [2 , 3]
         alku = 5
+        lkm = ed_lkm = 2
     edAika = timer()
     ed_i = alku
-    n = 30379397+1000
     for i in range(alku, n, 2) :
+        if lkm >= kpl:
+            break
         prime = True
-        #if i % tulostusvali == 0: # parittomat luvut ei napsahda
-        #    tulostusvali = talletusvali // 2
-        #    print(i, "lkm:", lkm, sep="\t", end="\r")  # aika(a, b),
-        # jos primes olisi järjestyksessä, niin ei tarvitsisi käydä läpi kaikkia primes -lukuja
-        # vaan voisi lopettaa "puolivälissä" -> x pow 2:ssa ?
-        stopper = i**0.5
-        #stopperPrime = False
+        stopper = i**0.5 # i/2
         for j in primes:
             if i % j == 0:
                 prime = False  # not prime
                 break
             if j > stopper:
-            #    stopperPrime = True
-                break
-            #if j > i/2:
-            #    break # potential prime
+                break # prime
         if prime:
-            #if not stopperPrime:
-            #    print("\t\t\t\t", "Prime <> StopperPrime", i)  
             lkm += 1
             primes.append(i)  # .append(i) # .add(i)
             if lkm % talletusvali == 0:
-                # olisi nopeampi vain lisätä tiedostoon, mutta {} ei ole järjestyksessä
                 hh = timer() - edAika
                 kirjoita(primes, "alkuluvut.txt", lkm,
                          lkm-ed_lkm, edAika, i-ed_i)  # välitalletus
@@ -45,8 +35,6 @@ def toka(n, primes):
                 ed_lkm = lkm
                 ed_i = i
                 edAika = timer()
-        #if stopperPrime and not prime:
-        #    print("\t\t\t\t", "StopperPrime <> Prime ", i)  
     kirjoita(primes, "alkuluvut.txt", lkm-ed_lkm, edAika, i-ed_i)
 
 tiheys = [10000000, 5000000, 2000000, 1000000,500000,250000,100000,50000,25000,10000,5000,2500,1000,500,250,100,50,25,10,5,2]
@@ -95,16 +83,19 @@ import time
 if __name__ == "__main__":
     start = timer()
     vanhatiedosto = "alkuluvut.txt"  # "alkuluvut1M.txt"
-    with open(vanhatiedosto, "r", encoding="utf-8") as infile:
-        apu = infile.readline()
-    primes = list(map(int, apu[1:-2].split(", ")))  # set() / tuple()
+    try:
+        with open(vanhatiedosto, "r", encoding="utf-8") as infile:
+            apu = infile.readline()
+        primes = list(map(int, apu[1:-2].split(", ")))  # set() / tuple()        
+    except:
+        primes = [2, 3]
     print(primes[-10:])
     end = timer()
     print("luettu (", len(primes), ") kpl :", aika(start, end))
+    lkm = input("Montako haluat:")
     print(time.strftime("%H:%M:%S", time.gmtime()))
-    n = 10**9 # int(input("n:"))
     start = timer()
-    toka(n, primes)
+    toka(primes, int(lkm))
     end = timer()
     print("laskettu:", aika(start, end))
     print(time.strftime("%H:%M:%S", time.gmtime()))
