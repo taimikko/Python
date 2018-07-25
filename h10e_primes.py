@@ -12,22 +12,28 @@ def toka(n, primes):
     a = timer()
     edAika = a
     ed_i = alku
-    for i in range(alku, n):
+    for i in range(alku, n, 2) :
         prime = True
         if i % tulostusvali == 0:
             b = timer()
-            tulostusvali = talletusvali // 5 # valiAika(b-a, tulostusvali) 
+            tulostusvali = talletusvali // 2 # valiAika(b-a, tulostusvali) 
             print(i, "lkm:", lkm, sep="\t", end="\r")  # aika(a, b),
             a = timer()
         # jos primes olisi järjestyksessä, niin ei tarvitsisi käydä läpi kaikkia primes -lukuja
-        # vaan voisi lopettaa "puolivälissä"
+        # vaan voisi lopettaa "puolivälissä" -> x pow 2:ssa ?
+        stopper = i**0.5
+        stopperPrime = False
         for j in primes:
             if i % j == 0:
                 prime = False  # not prime
                 break
+            if j > stopper:
+                stopperPrime = True
             if j > i/2:
                 break # potential prime
         if prime:
+            if not stopperPrime:
+                print("\t\t\t\t", "Prime <> StopperPrime", i)  
             lkm += 1
             primes.append(i)  # .append(i) # .add(i)
             if lkm % talletusvali == 0:
@@ -39,6 +45,8 @@ def toka(n, primes):
                 ed_lkm = lkm
                 ed_i = i
                 edAika = timer()
+        if stopperPrime and not prime:
+            print("\t\t\t\t", "StopperPrime <> Prime ", i)  
     kirjoita(primes, "alkuluvut.txt", lkm-ed_lkm, edAika, i-ed_i)
 
 tiheys = [1000000,500000,250000,100000,50000,25000,10000,5000,2500,1000,500,250,100,50,25,10,5,2]
