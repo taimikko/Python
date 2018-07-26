@@ -28,8 +28,8 @@ WETO's first test uses essentially the following test code (where WETO has saved
 
 class Point2D:
     def __init__(self, x=0, y=0):
-        self.__x = float(x)
-        self.__y = float(y)
+        self.__x = x
+        self.__y = y
 
     @property
     def x(self):
