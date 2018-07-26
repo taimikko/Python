@@ -244,3 +244,5 @@ if __name__ == "__main__":
     laskeAlkulukuja(primes, int(lkm))
 
     print(time.strftime("%H:%M:%S", time.localtime()))
+
+    
