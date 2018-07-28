@@ -101,9 +101,9 @@ class Seuranta:
     def taajuus(self, vanha):
         uusi = vanha
         kulunut = timer() - self.aika
-        if kulunut > 300:  # 5min = 300 s
+        if kulunut > 600:  # 5min = 300 s
             uusi = self.pienenna(vanha)
-        elif kulunut < 120:  # 2 min = 120 s
+        elif kulunut < 280:  # 2 min = 120 s
             uusi = self.suurenna(vanha)
         return(uusi)
 
@@ -133,7 +133,7 @@ class Seuranta:
 
         if uusiaAlkulukuja > 0:
             a = timer()
-            SELDOM = 10**6
+            SELDOM = 10**7
             if alkulukujaYhteensa % SELDOM == 0:
                 primes.sort()  # ei tarvita einakaan yhdessä säikeessä
                 # kestää ...
@@ -141,26 +141,23 @@ class Seuranta:
                     for i in range(len(primes)//SELDOM):
                         print(primes[i*SELDOM:(i+1)*SELDOM],
                               file=out, flush=True)
+                # tehdään kopio varmuuden vuoksi
+                backup = self.tiedosto[:-4]+"_" + str(alkulukujaYhteensa)+"_"+time.strftime("%H%M%S", time.localtime())+".txt"
+                try:
+                    remove(backup)
+                except FileNotFoundError:
+                    pass
+                try:
+                    copyfile(self.tiedosto, backup)
+                except Exception as e:
+                    print("Tiedoston varmuuskopiointi ei onnistu:",
+                        self.tiedosto, backup, e)
             else:
                 with open(self.tiedosto, "a", encoding="utf-8") as out:
                     print(primes[-uusiaAlkulukuja:], file=out,
                         flush=True)  # nopeampi
             print(self.kulunutAika(self.aika), uusiaAlkulukuja, "{:.3f}".format(etenema/uusiaAlkulukuja), "\ttalletus:",
                 self.kulunutAika(a))  # lkm = len(primes)
-
-        # tehdään kopio varmuuden vuoksi
-        backup = self.tiedosto[:-4]+"_" + str(alkulukujaYhteensa)+"_"+time.strftime("%H%M%S", time.localtime())+".txt"
-
-        try:
-            remove(backup)
-        except FileNotFoundError:
-            pass
-        try:
-            copyfile(self.tiedosto, backup)
-            # rename(tiedosto, backup)
-        except Exception as e:
-            print("Tiedoston varmuuskopiointi ei onnistu:",
-                  self.tiedosto, backup, e)
 
         talletusvali=self.taajuus(talletusvali)
         self.lkm=alkulukujaYhteensa
@@ -223,7 +220,7 @@ def laskeAlkulukuja(primes, kpl):
             primes.append(luku)  
             if lkm % talletusvali == 0:
                 talletusvali = ed.kirjoita(primes, lkm, luku, talletusvali) 
-            elif lkm % (talletusvali//10) == 0:
+            elif lkm % (talletusvali//100) == 0:
                 print("isoin:{:14,d}".format(luku), "lkm:{:11,d}".format(lkm), end="\r")  # tilannetiedotus
 
     ed.kirjoita(primes, lkm, luku, talletusvali)
@@ -233,9 +230,9 @@ def laskeAlkulukuja(primes, kpl):
 if __name__ == "__main__":
     primes=lueAiemmat(TIEDOSTO)
 
-    lkm=input("Montako haluat: (enter = laske 'kaikki')")
-    if lkm == None or lkm == "":
-        lkm=10**10
+    #lkm=input("Montako haluat: (enter = laske 'kaikki')")
+    #if lkm == None or lkm == "":
+    lkm=10**11
 
     print(time.strftime("%H:%M:%S", time.localtime()))
     # if len(primes) >= 10000000:  # yli 10M
@@ -244,5 +241,3 @@ if __name__ == "__main__":
     laskeAlkulukuja(primes, int(lkm))
 
     print(time.strftime("%H:%M:%S", time.localtime()))
-
-    
