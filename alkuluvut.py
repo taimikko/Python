@@ -20,42 +20,9 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 TIEDOSTO = "alkuluvut.txt"
 
-"""
-def kolmas(primes, kpl):
-    talletusvali = 100000
-    if len(primes) == 0:
-        ed = Seuranta(0, 1, TIEDOSTO)
-        primes = [2, 3]
-        ed.kirjoita(primes, 2, 1)
-    else:
-        ed = Seuranta(len(primes), max(primes), TIEDOSTO)    
-    lkm = len(primes)
-    luku = max(primes) 
-    while lkm < kpl:
-        luku += 2  # parillisia ei tarkastella
-        prime = True
-        stopper = luku**0.5  # i/2
-        for alkuluku in primes:
-            if luku % alkuluku == 0:
-                prime = False  # not prime
-                break
-            if alkuluku > stopper:
-                break  # prime
-        if prime:
-            lkm += 1
-            primes.append(luku)  
-            if lkm % talletusvali == 0:
-                talletusvali = ed.kirjoita(primes, lkm, luku, talletusvali) 
-            elif lkm % (talletusvali//10) == 0:
-                print(luku, "lkm:", "{:11,d}".format(lkm), sep="\t", end="\r")  # tilannetiedotus
-
-    ed.kirjoita(primes, lkm, luku, talletusvali)
-"""
-
-
 
 class Seuranta:
-    def __init__(self, lkm=0, alkuluku=0, tiedosto="alkuluvut.txt", aika=timer(), talletusvali=1000):
+    def __init__(self, lkm=0, alkuluku=0, tiedosto="alkuluvut.txt", aika=timer(), talletusvali=100000):
         self.__lkm = lkm
         self.__alkuluku = alkuluku
         self.__aika = aika
@@ -98,72 +65,62 @@ class Seuranta:
     aika = property(getAika, setAika)
     talletusvali = property(getTalletusvali, setTalletusvali)
 
-    def taajuus(self, vanha):
-        uusi = vanha
+    def tarkistaTulostusTaajuus(self):
         kulunut = timer() - self.aika
         if kulunut > 600:  # 5min = 300 s
-            uusi = self.pienenna(vanha)
+            self.pienenna()
         elif kulunut < 280:  # 2 min = 120 s
-            uusi = self.suurenna(vanha)
-        return(uusi)
+            self.suurenna()
+        
 
-
-    def pienenna(self, luku):
+    def pienenna(self):
         self.tiheys.sort()
-        i = self.tiheys.index(luku)
+        i = self.tiheys.index(self.talletusvali)
         if i > 0:
-            return(self.tiheys[i-1])
-        return(luku)
+            self.talletusvali = self.tiheys[i-1]
 
 
-    def suurenna(self, luku):
+    def suurenna(self):
         self.tiheys.sort()
-        i = self.tiheys.index(luku)
+        i = self.tiheys.index(self.talletusvali)
         if i < len(self.tiheys)-1:
-            return(self.tiheys[i+1])
-        return(luku)
+            self.talletusvali = self.tiheys[i+1]
 
+    def usein(self, lkm):
+        SELDOM = 10**7
+        return(lkm % SELDOM > 0) #joka 10.000.000 on true
 
-    def kirjoita(self, primes, alkulukujaYhteensa, suurinAlkulku=1, talletusvali=100000):
+    def paivitaSeurantaparametrit(self):
+        self.lkm=len(primes)
+        self.aika=timer()
+        self.suurinAlkuluku=max(primes)
+
+    MILJOONA = 10**6
+    def kirjoita(self, primes):
+        alkulukujaYhteensa = len(primes)
         uusiaAlkulukuja = alkulukujaYhteensa-self.lkm
-        etenema = suurinAlkulku-self.suurinAlkuluku
+        etenema = max(primes)-self.suurinAlkuluku
         print("talletetaan", "{:11,d}".format(alkulukujaYhteensa), "alkulukua ", end="")
         # 2M alkuluvun jälkeen ei toimi enää näin vaan ilmoittaa MemmoryErrorista
         # print(sorted(primes), file=out)
 
         if uusiaAlkulukuja > 0:
             a = timer()
-            SELDOM = 10**7
-            if alkulukujaYhteensa % SELDOM == 0:
-                primes.sort()  # ei tarvita einakaan yhdessä säikeessä
-                # kestää ...
-                with open(self.tiedosto, "w", encoding="utf-8") as out:
-                    for i in range(len(primes)//SELDOM):
-                        print(primes[i*SELDOM:(i+1)*SELDOM],
-                              file=out, flush=True)
-                # tehdään kopio varmuuden vuoksi
-                backup = self.tiedosto[:-4]+"_" + str(alkulukujaYhteensa)+"_"+time.strftime("%H%M%S", time.localtime())+".txt"
-                try:
-                    remove(backup)
-                except FileNotFoundError:
-                    pass
-                try:
-                    copyfile(self.tiedosto, backup)
-                except Exception as e:
-                    print("Tiedoston varmuuskopiointi ei onnistu:",
-                        self.tiedosto, backup, e)
-            else:
+            if self.usein(alkulukujaYhteensa):
                 with open(self.tiedosto, "a", encoding="utf-8") as out:
-                    print(primes[-uusiaAlkulukuja:], file=out,
-                        flush=True)  # nopeampi
+                    print(primes[-uusiaAlkulukuja:], file=out, flush=True)
+            else:
+                #primes.sort()  # ei tarvita einakaan yhdessä säikeessä
+                with open(self.tiedosto, "w", encoding="utf-8") as out:
+                    for i in range(len(primes)//MILJOONA):
+                        print(primes[i*MILJOONA:(i+1)*MILJOONA],
+                              file=out, flush=True)
+                teeVarmuuskopio(self.tiedosto, alkulukujaYhteensa)
+            
             print(self.kulunutAika(self.aika), uusiaAlkulukuja, "{:.3f}".format(etenema/uusiaAlkulukuja), "\ttalletus:",
                 self.kulunutAika(a))  # lkm = len(primes)
+        self.paivitaSeurantaparametrit()
 
-        talletusvali=self.taajuus(talletusvali)
-        self.lkm=alkulukujaYhteensa
-        self.aika=timer()
-        self.suurinAlkuluku=suurinAlkulku
-        return(talletusvali)
 
     def kulunutAika(self, a):
         b=timer()
@@ -174,6 +131,18 @@ class Seuranta:
         if h == 0:
             return("{:0>2d}:{:0>5.2f}".format(m, s))
         return("{:0>2d}:{:0>2d}:{:0>5.2f}".format(h, m, s))
+
+def teeVarmuuskopio(tiedosto, alkulukujaYhteensa):
+    backup = tiedosto+"_" + str(alkulukujaYhteensa//MILJOONA)+"M_"+time.strftime("%H%M%S", time.localtime())+".txt"
+    try:
+        remove(backup)
+    except FileNotFoundError:
+        pass
+    try:
+        copyfile(tiedosto, backup)
+    except Exception as e:
+        print("Tiedoston varmuuskopiointi ei onnistu:", tiedosto, backup, e)
+
 
 def lueAiemmat(vanhatiedosto):
     print("Luetaan tiedostoa", vanhatiedosto)
@@ -196,11 +165,10 @@ def lueAiemmat(vanhatiedosto):
     return primes
 
 def laskeAlkulukuja(primes, kpl):
-    talletusvali = 100000
     if len(primes) == 0:
         ed = Seuranta(0, 1, TIEDOSTO)
         primes = [2, 3]
-        ed.kirjoita(primes, 2, 1)
+        ed.kirjoita(primes)
     else:
         ed = Seuranta(len(primes), max(primes), TIEDOSTO)    
     lkm = len(primes)
@@ -218,12 +186,13 @@ def laskeAlkulukuja(primes, kpl):
         if prime:
             lkm += 1
             primes.append(luku)  
-            if lkm % talletusvali == 0:
-                talletusvali = ed.kirjoita(primes, lkm, luku, talletusvali) 
-            elif lkm % (talletusvali//100) == 0:
+            if lkm % (ed.talletusvali//100) == 0:
                 print("isoin:{:14,d}".format(luku), "lkm:{:11,d}".format(lkm), end="\r")  # tilannetiedotus
+            if lkm % ed.talletusvali == 0:
+                ed.kirjoita(primes) 
+                ed.tarkistaTulostusTaajuus()
 
-    ed.kirjoita(primes, lkm, luku, talletusvali)
+    ed.kirjoita(primes)
 
 
 
@@ -235,9 +204,7 @@ if __name__ == "__main__":
     lkm=10**11
 
     print(time.strftime("%H:%M:%S", time.localtime()))
-    # if len(primes) >= 10000000:  # yli 10M
-    #     kolmas(primes, int(lkm))
-    # else:
+ 
     laskeAlkulukuja(primes, int(lkm))
 
     print(time.strftime("%H:%M:%S", time.localtime()))
