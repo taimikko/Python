@@ -214,7 +214,7 @@ def tulostaBinary(uusitiedosto): # "w" tai "wb"
 
 if __name__ == "__main__":
     print(time.strftime("%H:%M:%S", time.localtime()))
-    primes=lueAiemmat("alku_koe.txt")
+    primes=lueAiemmat("alku_pieni.txt")
 
     print(time.strftime("%H:%M:%S", time.localtime()))
     #laskeAlkulukuja(primes, int(lkm))
